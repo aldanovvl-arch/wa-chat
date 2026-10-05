@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useChatStore } from '../store/chatStore';
 import MessageBubble from './MessageBubble';
+import Avatar from './Avatar';
 
 const MAX_LEN = 20000;
 const EMPTY: never[] = [];
@@ -21,7 +22,12 @@ export default function ChatWindow() {
   }, [messages.length, activeChatId]);
 
   if (!activeChatId || !chat) {
-    return <div className="placeholder">Выберите чат или создайте новый</div>;
+    return (
+      <div className="placeholder">
+        <h2>WhatsApp Chat</h2>
+        <p>Выберите чат слева или создайте новый, чтобы отправить сообщение.</p>
+      </div>
+    );
   }
 
   const send = () => {
@@ -38,6 +44,7 @@ export default function ChatWindow() {
         <button className="back" onClick={() => openChat(null)} aria-label="Назад">
           ←
         </button>
+        <Avatar size={40} />
         <strong>{chat.title}</strong>
       </header>
       <div
@@ -48,7 +55,7 @@ export default function ChatWindow() {
           stickRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
         }}
       >
-        {messages.length === 0 && <div className="empty">Нет сообщений</div>}
+        {messages.length === 0 && <div className="empty">Нет сообщений. Напишите первым.</div>}
         {messages.map((m) => (
           <MessageBubble key={m.id} m={m} />
         ))}
@@ -73,8 +80,8 @@ export default function ChatWindow() {
             }
           }}
         />
-        <button className="btn" disabled={!text.trim()}>
-          Отправить
+        <button className="send" disabled={!text.trim()} aria-label="Отправить">
+          <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" /></svg>
         </button>
       </form>
     </section>
